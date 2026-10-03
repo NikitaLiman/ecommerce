@@ -7,8 +7,8 @@ import {Checkbox} from "@/components/ui/checkbox";
 
 export default function Home() {
   return (
-  <div className='pad-4'>
-      <div className='flex flex-col gap-y-4'>
+  <div>
+      <div className='flex flex-col gap-y-4 p-4'>
           <div>
               <Button variant={"elevated"}>
                   qwe
