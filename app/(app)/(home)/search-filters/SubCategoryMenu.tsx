@@ -1,9 +1,10 @@
 import {Category} from "@/payload-types";
 import Link from "next/link";
+import {CustomCategory} from "@/app/(app)/(home)/types";
 
 interface IProps {
     isOpen: boolean;
-    category: Category;
+    category: CustomCategory;
     position: {top: number; left: number};
 }
 
@@ -22,7 +23,7 @@ export const SubCategoryMenu = ({isOpen,category,position}: IProps) => {
                     <div>
                         {category.subcategories.map((subcategory: Category) => (
                             <Link className='w-full hover:bg-black textl-left p-4 hover:text-white flex justify-between
-                            items-center underline font-medium' key={subcategory.slug} href={`/${subcategory.slug}`}>{subcategory.name}</Link>
+                            items-center underline font-medium' key={subcategory.slug} href={`/${category.slug}/${subcategory.slug}`}>{subcategory.name}</Link>
                         ))}
                     </div>
                 </div>
