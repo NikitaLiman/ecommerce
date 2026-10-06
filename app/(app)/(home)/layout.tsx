@@ -5,6 +5,7 @@ import {Navbar} from "@/app/(app)/(home)/navbar";
 import {Footer} from "@/app/(app)/(home)/footer";
 import {SearchFilters} from "@/app/(app)/(home)/search-filters";
 import {Category} from "@/payload-types";
+import {CustomCategory} from "@/app/(app)/(home)/types";
 
 interface IProps {
     children?: React.ReactNode
@@ -24,9 +25,11 @@ const Layout = async ({children}: IProps) => {
             parent: {
                 exists: false
             }
-        }
+        },
+        sort: 'name'
+
     })
-    const formattedData = data.docs.map(doc => ({
+    const formattedData: CustomCategory[] = data.docs.map(doc => ({
         ...doc,
         subcategories: (doc.subcategories?.docs ?? []).map((doc) => ({
             ...(doc as Category)

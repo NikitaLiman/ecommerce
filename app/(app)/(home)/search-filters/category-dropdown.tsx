@@ -1,13 +1,14 @@
 'use client'
-import {Category} from "@/payload-types";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {useRef, useState} from "react";
 import {useDropdownPositions} from "@/app/(app)/(home)/search-filters/ use-dropdown-position";
 import {SubCategoryMenu} from "@/app/(app)/(home)/search-filters/SubCategoryMenu";
+import {CustomCategory} from "@/app/(app)/(home)/types";
+import Link from "next/link";
 
 interface IProps {
-    category: Category;
+    category: CustomCategory;
     isActive: boolean;
     isNavigationHovered: boolean;
 }
@@ -20,18 +21,30 @@ export const CategoryDropdown = ({category,isNavigationHovered,isActive}: IProps
 
     const dropDownPosition = getDropdownPositions()
 
-    const onMouseEnter = (e: React.MouseEvent) => {
+    const onMouseEnter = () => {
         if(category.subcategories) {
             setIsOpen(true);
         }
     }
+    const onMouseLeave = () => setIsOpen(false);
 
-    const onMouseLeave = (e: React.MouseEvent) => setIsOpen(false);
+
+    const hasSubcategories = (category.subcategories?.length ?? 0) > 0;
+
+    const toggleDropdown = () => {
+        if (hasSubcategories) {
+            setIsOpen((prev) => !prev);
+        }
+    };
   return (
-    <div className='relative' ref={dropdownRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} >
+    <div className='relative' ref={dropdownRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={toggleDropdown} >
        <div className='relative'>
-           <Button className={cn('h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-primary text-black', isActive && !isNavigationHovered && "bg-white border-primary" )} variant='elevated'>
-               {category.name}
+           <Button className={cn('h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-primary text-black', isActive && !isNavigationHovered && "bg-white border-primary",
+               isOpen && "bg-white border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[4px] " +
+               "hover:-translate-x-[4px]")} variant='elevated'>
+              <Link href={`/${category.slug === 'all' ? '/' : `/${category.slug}`}`} >
+                  {category.name}
+              </Link>
            </Button>
            {category.subcategories && category.subcategories.length > 0 &&
                (
