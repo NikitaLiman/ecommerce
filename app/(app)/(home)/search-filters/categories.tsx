@@ -1,14 +1,14 @@
 'use client'
 import {CategoryDropdown} from "@/app/(app)/(home)/search-filters/category-dropdown";
-import {CustomCategory} from "@/app/(app)/(home)/types";
 import {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {ListFilterIcon} from "lucide-react";
 import {CategoriesSideBar} from "@/app/(app)/(home)/search-filters/categories-sidebar";
+import {CategoriesGetManyOutputs} from "@/modules/categories/types";
 
 interface IProps {
-    data: CustomCategory[];
+    data: CategoriesGetManyOutputs;
 }
 export const Categories = ({data}: IProps) => {
 
@@ -62,7 +62,7 @@ export const Categories = ({data}: IProps) => {
     return (
     <div className='relative w-full '>
         {/*{"Categories sidebar"}*/}
-        <CategoriesSideBar data={data} open={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen}/>
+        <CategoriesSideBar  open={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen}/>
 
         <div style={{position: "fixed", top: -9999, left: -9999}} ref={measureRef} className='absolute opacity-0 pointer-events-none flex'>
             {data.map((category) => (

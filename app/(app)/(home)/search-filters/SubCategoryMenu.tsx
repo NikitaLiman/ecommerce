@@ -1,10 +1,10 @@
 import {Category} from "@/payload-types";
 import Link from "next/link";
-import {CustomCategory} from "@/app/(app)/(home)/types";
+import {CategoriesGetManyOutputs} from "@/modules/categories/types";
 
 interface IProps {
     isOpen: boolean;
-    category: CustomCategory;
+    category: CategoriesGetManyOutputs[1];
     position: {top: number; left: number};
 }
 
