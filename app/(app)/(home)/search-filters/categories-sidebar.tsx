@@ -1,24 +1,29 @@
 'use client'
 
-import {CustomCategory} from "@/app/(app)/(home)/types";
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import {useState} from "react";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {ChevronLeftIcon, ChevronRightIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
+import {useTRPC} from "@/trpc/client";
+import {useQuery} from "@tanstack/react-query";
+import {CategoriesGetManyOutputs} from "@/modules/categories/types";
 
 interface IProps {
     open: boolean;
     setIsSideBarOpen: (isSideBarOpen: boolean) => void;
-    data: CustomCategory[];
 }
 
-export const CategoriesSideBar = ({open,setIsSideBarOpen,data}: IProps) => {
+export const CategoriesSideBar = ({open,setIsSideBarOpen}: IProps) => {
+
+    const rtpc = useTRPC()
+
+    const {data} = useQuery(rtpc.categories.getMany.queryOptions())
 
     const router = useRouter();
 
-    const [parentCategory,setParentCategory] = useState<CustomCategory[] | null> (null);
-    const [selectedCategory,setSelectedCategory] = useState<CustomCategory | null> (null);
+    const [parentCategory,setParentCategory] = useState<CategoriesGetManyOutputs | null> (null);
+    const [selectedCategory,setSelectedCategory] = useState<CategoriesGetManyOutputs[1] | null> (null);
 
 
     const backgroundColor = selectedCategory?.color || 'white'
@@ -31,9 +36,9 @@ export const CategoriesSideBar = ({open,setIsSideBarOpen,data}: IProps) => {
 
     const currentCategories = parentCategory ?? data ?? []
 
-    const handleCategoryClick = (category: CustomCategory) => {
+    const handleCategoryClick = (category: CategoriesGetManyOutputs[1]) => {
         if(category.subcategories && category.subcategories.length > 0){
-            setParentCategory(category.subcategories as CustomCategory[])
+            setParentCategory(category.subcategories as CategoriesGetManyOutputs)
             setSelectedCategory(category)
         } else {
             if(parentCategory && selectedCategory){

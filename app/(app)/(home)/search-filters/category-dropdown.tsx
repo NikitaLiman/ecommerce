@@ -4,11 +4,11 @@ import {cn} from "@/lib/utils";
 import {useRef, useState} from "react";
 import {useDropdownPositions} from "@/app/(app)/(home)/search-filters/ use-dropdown-position";
 import {SubCategoryMenu} from "@/app/(app)/(home)/search-filters/SubCategoryMenu";
-import {CustomCategory} from "@/app/(app)/(home)/types";
 import Link from "next/link";
+import {CategoriesGetManyOutputs} from "@/modules/categories/types";
 
 interface IProps {
-    category: CustomCategory;
+    category: CategoriesGetManyOutputs[1];
     isActive: boolean;
     isNavigationHovered: boolean;
 }
