@@ -2,7 +2,7 @@
 
 import {BookmarkCheckIcon, ListFilterIcon, SearchIcon} from "lucide-react";
 import {Input} from "@/components/ui/input";
-import {CategoriesSideBar} from "@/app/(app)/(home)/search-filters/categories-sidebar";
+import {CategoriesSideBar} from "@/modules/home/ui/components/search-filters/categories-sidebar";
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {useTRPC} from "@/trpc/client";

@@ -1,16 +1,21 @@
 'use client'
-import {CategoryDropdown} from "@/app/(app)/(home)/search-filters/category-dropdown";
+import {CategoryDropdown} from "@/modules/home/ui/components/search-filters/category-dropdown";
 import {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {ListFilterIcon} from "lucide-react";
-import {CategoriesSideBar} from "@/app/(app)/(home)/search-filters/categories-sidebar";
+import {CategoriesSideBar} from "@/modules/home/ui/components/search-filters/categories-sidebar";
 import {CategoriesGetManyOutputs} from "@/modules/categories/types";
+import {useParams} from "next/navigation";
 
 interface IProps {
     data: CategoriesGetManyOutputs;
 }
 export const Categories = ({data}: IProps) => {
+
+    const params = useParams();
+
+
 
     const containerRef = useRef<HTMLDivElement>(null);
     const measureRef = useRef<HTMLDivElement>(null);
@@ -20,7 +25,9 @@ export const Categories = ({data}: IProps) => {
     const [isAnyHovered, setIsAnyHovered] = useState(false);
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
-    const activeCategory = "all"
+     const categoryParam = params?.category as string | undefined;
+
+    const activeCategory = categoryParam || 'all'
 
 
     const activeCategoryId = data.findIndex((category) => category.slug === activeCategory);
