@@ -1,18 +1,15 @@
-import Image from "next/image";
-import {getQueryClient, trpc} from "@/trpc/server";
+'use client'
+import {useTRPC} from "@/trpc/client";
+import {useQuery} from "@tanstack/react-query";
 
-export default async function Home() {
+export default  function Home() {
 
-
-    const queryClient = getQueryClient()
-
-    const category = await queryClient.fetchQuery(trpc.categories.getMany.queryOptions())
+    const trpc = useTRPC()
+    const {data} = useQuery(trpc.auth.session.queryOptions())
 
   return (
   <div>
-      Home
-
-      {JSON.stringify(category, null, 2)}
+      {JSON.stringify(data,null,2)}
   </div>
   );
 }
