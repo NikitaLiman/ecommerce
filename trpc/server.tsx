@@ -27,3 +27,8 @@ export const trpc = createTRPCOptionsProxy({
 //   client: createTRPCClient({ links: [httpLink({ url: '...' })] }),
 //   queryClient: getQueryClient,
 // });
+export const caller = appRouter.createCaller(async () => {
+    return createTRPCContext({
+        headers: await headers(),
+    });
+});

@@ -7,10 +7,10 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
-import {Field, FieldDescription, FieldError, FieldGroup, FieldLabel} from "@/components/ui/field";
+import {Field, FieldError, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {useTRPC} from "@/trpc/client";
-import  {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 
@@ -25,7 +25,7 @@ export const SignInViews = () => {
     const router = useRouter();
 
     const trpc = useTRPC();
-
+    const queryClient = useQueryClient();
     const login = useMutation(trpc.auth.login.mutationOptions(
         {
             onError: (
@@ -33,7 +33,8 @@ export const SignInViews = () => {
             ) => [
                 toast.error(error.message)
             ],
-            onSuccess: () => {
+            onSuccess: async () => {
+               await queryClient.invalidateQueries(trpc.auth.session.queryFilter())
                 router.push("/ ");
             }
         }

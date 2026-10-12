@@ -10,7 +10,7 @@ import {Button} from "@/components/ui/button";
 import {Field, FieldDescription, FieldError, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {useTRPC} from "@/trpc/client";
-import  {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 
@@ -25,7 +25,7 @@ export const SignUpViews = () => {
     const router = useRouter();
 
     const trpc = useTRPC();
-
+    const queryClient = useQueryClient();
     const register = useMutation(trpc.auth.register.mutationOptions(
         {
             onError: (
@@ -33,7 +33,8 @@ export const SignUpViews = () => {
             ) => [
                 toast.error(error.message)
             ],
-            onSuccess: () => {
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(trpc.auth.session.queryFilter())
                 router.push("/ ");
             }
         }
