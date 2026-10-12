@@ -2,8 +2,8 @@
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {useRef, useState} from "react";
-import {useDropdownPositions} from "@/app/(app)/(home)/search-filters/ use-dropdown-position";
-import {SubCategoryMenu} from "@/app/(app)/(home)/search-filters/SubCategoryMenu";
+import {useDropdownPositions} from "@/modules/home/ui/components/search-filters/ use-dropdown-position";
+import {SubCategoryMenu} from "@/modules/home/ui/components/search-filters/SubCategoryMenu";
 import Link from "next/link";
 import {CategoriesGetManyOutputs} from "@/modules/categories/types";
 
@@ -42,7 +42,7 @@ export const CategoryDropdown = ({category,isNavigationHovered,isActive}: IProps
            <Button className={cn('h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-primary text-black', isActive && !isNavigationHovered && "bg-white border-primary",
                isOpen && "bg-white border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[4px] " +
                "hover:-translate-x-[4px]")} variant='elevated'>
-              <Link href={`/${category.slug === 'all' ? '/' : `/${category.slug}`}`} >
+              <Link href={`${category.slug === 'all' ? '/' : `/${category.slug}`}`} >
                   {category.name}
               </Link>
            </Button>

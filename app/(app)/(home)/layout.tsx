@@ -1,8 +1,8 @@
 
 
-import {Navbar} from "@/app/(app)/(home)/navbar";
-import {Footer} from "@/app/(app)/(home)/footer";
-import {SearchFilters, SearchInputLoading} from "@/app/(app)/(home)/search-filters";
+import {Navbar} from "@/modules/home/ui/components/navbar";
+import {Footer} from "@/modules/home/ui/components/footer";
+import {SearchFilters, SearchInputLoading} from "@/modules/home/ui/components/search-filters";
 
 
 import {getQueryClient, trpc} from "@/trpc/server";
