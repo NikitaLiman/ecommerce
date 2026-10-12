@@ -8,6 +8,8 @@ import {usePathname} from "next/navigation";
 import {NavbarSidebar} from "@/app/(app)/(home)/navbar-sidebar";
 import React from "react";
 import {MenuIcon} from "lucide-react";
+import {useTRPC} from "@/trpc/client";
+import {useQuery} from "@tanstack/react-query";
 
 const poppins = Poppins({
     subsets: ['latin'],
@@ -41,6 +43,10 @@ const navbarItems = [
 export const Navbar = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const pathName = usePathname()
+
+    const trpc = useTRPC()
+    const session = useQuery(trpc.auth.session.queryOptions())
+
   return (
     <nav className='h-20 flex border-b justify-between  font-medium bg-white'>
         <Link href='/public' className='pl-6 flex items-center'>
@@ -58,21 +64,35 @@ export const Navbar = () => {
                 </NavbarItem>
             ))}
         </div>
-        <div className='hidden lg:flex'>
-            <Button
-                variant='secondary' className='border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white
+        {session?.data?.user ?
+
+            <div className='hidden lg:flex'>
+                <Button
+                    variant='secondary' className='border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white
         hover:bg-pink-400 transition-colors text-lg'>
-               <Link href={'/sign-in'}>
-                   Log in
-               </Link>
-            </Button>
-            <Button className='border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-black text-white
+                    <Link href={'/admin'}>
+                        Dashboard
+                    </Link>
+                </Button>
+            </div>
+            :
+            <div className='hidden lg:flex'>
+                <Button
+                    variant='secondary' className='border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white
+        hover:bg-pink-400 transition-colors text-lg'>
+                    <Link prefetch href={'/sign-in'}>
+                        Log in
+                    </Link>
+                </Button>
+                <Button className='border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-black text-white
         hover:bg-pink-400 hover:text-black transition-colors text-lg'>
-                <Link href={'/sign-up'}>
-                   start selling
-                </Link>
-            </Button>
-        </div>
+                    <Link prefetch href={'/sign-up'}>
+                        start selling
+                    </Link>
+                </Button>
+            </div>
+        }
+
         <div className='lg:hidden flex items-center justify-center'>
             <Button variant='ghost' className='size-12 border-transparent bg-white' onClick={()=>setIsOpen(true)}>
                 <MenuIcon />
