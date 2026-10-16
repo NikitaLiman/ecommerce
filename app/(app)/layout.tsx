@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { TRPCReactProvider} from "@/trpc/client";
 import {Toaster} from "sonner";
+import {NuqsAdapter} from "nuqs/adapters/next";
 
 
 const dmSans = DM_Sans({
@@ -21,10 +22,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={dmSans.className}
     >
       <body className="min-h-full flex flex-col">
-      <TRPCReactProvider>
-        {children}
-        <Toaster/>
-      </TRPCReactProvider>
+      <NuqsAdapter>
+        <TRPCReactProvider>
+          {children}
+          <Toaster/>
+        </TRPCReactProvider>
+      </NuqsAdapter>
+
       </body>
     </html>
   );
