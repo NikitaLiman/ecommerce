@@ -31,7 +31,7 @@ export const SearchInput = ({disabled }: IProps) => {
             <ListFilterIcon/>
         </Button>
         {session.data?.user && (
-            <Button variant='elevated'>
+            <Button variant='elevated' className='bg-white'>
                 <Link className='flex items-center'  href='/Library'>
                     <BookmarkCheckIcon className='mr-2'/>
                     Library
