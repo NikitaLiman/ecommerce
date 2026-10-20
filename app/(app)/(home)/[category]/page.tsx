@@ -22,10 +22,18 @@ const Page = async ({params,searchParams}: IProps) => {
 
 
     const queryClient = getQueryClient();
-    void queryClient.prefetchQuery(trpc.products.getMany.queryOptions({
+    void queryClient.prefetchInfiniteQuery(trpc.products.getMany.infiniteQueryOptions(
+        {
         category,
         ...filters
-    }))
+        },
+        {
+            getNextPageParam: (lastPage) =>
+                lastPage.hasNextPage
+                    ? lastPage.nextPage ?? undefined
+                    : undefined,
+        }
+        ))
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
            <ProductListView category={category}/>

@@ -2,7 +2,6 @@
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {useRef, useState} from "react";
-import {useDropdownPositions} from "@/modules/home/ui/components/search-filters/ use-dropdown-position";
 import {SubCategoryMenu} from "@/modules/home/ui/components/search-filters/SubCategoryMenu";
 import Link from "next/link";
 import {CategoriesGetManyOutputs} from "@/modules/categories/types";
@@ -16,10 +15,10 @@ interface IProps {
 export const CategoryDropdown = ({category,isNavigationHovered,isActive}: IProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const {getDropdownPositions} = useDropdownPositions(dropdownRef);
 
 
-    const dropDownPosition = getDropdownPositions()
+
+
 
     const onMouseEnter = () => {
         if(category.subcategories) {
@@ -60,7 +59,7 @@ export const CategoryDropdown = ({category,isNavigationHovered,isActive}: IProps
         <SubCategoryMenu
             category={category}
             isOpen={isOpen}
-            position={dropDownPosition}
+
         />
     </div>
   );
