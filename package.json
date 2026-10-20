@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "generate:types": "payload generate:types",
-    "db:seed": "payload run ./seed.ts",
+    "db:seed":  "payload run ./seed.ts",
     "db:fresh": "payload migrate:fresh",
     "db:reset": "payload run db:fresh && db:seed"
   },
@@ -18,6 +18,7 @@
     "@hookform/resolvers": "^5.9.1",
     "@payloadcms/db-mongodb": "^3.90.2",
     "@payloadcms/next": "^3.90.2",
+    "@payloadcms/plugin-multi-tenant": "^3.90.2",
     "@payloadcms/richtext-lexical": "^3.90.2",
     "@shadcn/react": "^0.3.1",
     "@tanstack/react-query": "^5.104.1",

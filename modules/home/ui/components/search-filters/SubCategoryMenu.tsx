@@ -5,17 +5,16 @@ import {CategoriesGetManyOutputs} from "@/modules/categories/types";
 interface IProps {
     isOpen: boolean;
     category: CategoriesGetManyOutputs[1];
-    position: {top: number; left: number};
 }
 
-export const SubCategoryMenu = ({isOpen,category,position}: IProps) => {
+export const SubCategoryMenu = ({isOpen,category}: IProps) => {
   if(!isOpen || !category.subcategories || category.subcategories.length === 0) return null;
     console.log(category,'category');
 
   const backgroundColor = category.color || "F5F5F5"
 
     return (
-        <div style={{top: position.top, left: position.left}} className='fixed z-[100]'>
+        <div style={{top: "100%", left: 0}} className='absolute z-[100]'>
             <div className='pt-3 w-60'>
                 <div
                     style={{backgroundColor: backgroundColor}}
