@@ -4,6 +4,7 @@ import { getQueryClient,trpc} from "@/trpc/server";
 import {dehydrate, HydrationBoundary} from "@tanstack/react-query";
 import {loadProductFilter} from "@/modules/products/search-params";
 import {ProductListView} from "@/modules/products/ui/views/product-list-view";
+import {DEFAULT_LIMIT} from "@/modules/tags/constants";
 
 interface IProps {
     params: Promise<{
@@ -25,7 +26,8 @@ const Page = async ({params,searchParams}: IProps) => {
     void queryClient.prefetchInfiniteQuery(trpc.products.getMany.infiniteQueryOptions(
         {
         category,
-        ...filters
+        ...filters,
+        limit: DEFAULT_LIMIT,
         },
         {
             getNextPageParam: (lastPage) =>
