@@ -6,10 +6,12 @@ import {ProductList, ProductListSkeleton} from "@/modules/products/ui/components
 
 interface IProps {
     category?: string;
+    tenantSlug?: string;
+    narrowView?: boolean;
 }
 
 
-export const ProductListView = ({category}: IProps) => {
+export const ProductListView = ({category,tenantSlug,narrowView}: IProps) => {
   return (
       <div className='px-4 lg:px-12 py-8 flex flex-col gap-4'>
 
@@ -26,9 +28,11 @@ export const ProductListView = ({category}: IProps) => {
               </div>
 
               <div className='lg:col-span-4 xl:col-span-6'>
-                  <Suspense fallback={<ProductListSkeleton/>}>
+                  <Suspense fallback={<ProductListSkeleton narrowView={narrowView}/>}>
                       <ProductList
+                          narrowView={narrowView}
                           category={category}
+                          tenantSlug={tenantSlug}
                       />
                   </Suspense>
               </div>

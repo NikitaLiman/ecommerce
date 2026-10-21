@@ -1,13 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import {StarIcon} from "lucide-react";
+import {useRouter} from "next/navigation";
+import {generateTenantURL} from "@/lib/utils";
 
 interface IProps {
     id: string;
     name: string;
     imageUrl?: string;
-    authorUsername: string;
-    authorImageUrl?: string;
+    tenantSlug: string;
+    tenantImageUrl?: string;
     reviewRating: number;
     reviewCount: number;
     price: number;
@@ -18,12 +20,22 @@ export const ProductCard = ({
     id,
     name,
     imageUrl,
-    authorUsername,
-    authorImageUrl,
+    tenantSlug,
+    tenantImageUrl,
     reviewRating,
     reviewCount,
     price,
 }: IProps) => {
+
+    const router = useRouter();
+
+    const handleUserClick =  (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        router.push(generateTenantURL(tenantSlug))
+    }
+
   return (
       <Link href={`/products/${id}`}>
           <div className='border rounded-md bg-white overflow-hidden h-full flex flex-col
@@ -34,11 +46,11 @@ export const ProductCard = ({
               </div>
               <div className='p-4 border-y flex flex-col gap-3 flex-1'>
                   <h2 className='text-lg font-medium line-clamp-4'>{name}</h2>
-                  <div onClick={() => {}} className='flex items-center gap-2'>
-                      {authorImageUrl && (
-                          <Image src={authorImageUrl || '/img.png'} alt={authorUsername} width={16} height={16} className='rounded-full border shrink-0 size-4' />
+                  <div onClick={handleUserClick} className='flex items-center gap-2'>
+                      {tenantImageUrl && (
+                          <Image src={tenantImageUrl || '/img.png'} alt={tenantSlug} width={16} height={16} className='rounded-full border shrink-0 size-4' />
                       )}
-                      <p className='text-sm underline font-medium'>{authorUsername}</p>
+                      <p className='text-sm underline font-medium'>{tenantSlug}</p>
                   </div>
                   {
                       reviewCount > 0 && (
