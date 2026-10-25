@@ -5,11 +5,25 @@ import {useSuspenseQuery} from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
 import {generateTenantURL} from "@/lib/utils";
+import dynamic from "next/dynamic";
+import {Button} from "@/components/ui/button";
+import {ShoppingCartIcon} from "lucide-react";
 
 interface IProps {
     slug: string
 }
 
+
+
+const CheckoutButton = dynamic(
+    () =>
+        import("@/modules/checkout/ui/components/checkout-button")
+            .then((m) => m.CheckoutButton),
+    {
+        ssr: false,
+        loading: () => null,
+    }
+);
 
 export const Navbar = ({slug}: IProps) => {
 
@@ -27,7 +41,7 @@ export const Navbar = ({slug}: IProps) => {
                }
                <p className='text-xl'>{data.name}</p>
            </Link>
-
+            <CheckoutButton hideIfEmpty tenantSlug={slug}/>
        </div>
    </nav>
   );
@@ -38,6 +52,7 @@ export const NavBarSkeleton = () => {
         <nav className='h-20 border-b font-medium bg-white'>
             <div className='max-w(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12'>
              <div/>
+
             </div>
         </nav>
     )
