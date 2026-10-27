@@ -13,7 +13,7 @@ export const appRouter = createTRPCRouter({
     products: productsRouter,
     tags: tagsRouter,
     tenants: tenantsRouter,
-    checkout: checkoutRouter
+    checkout: checkoutRouter,
 
 });
 
