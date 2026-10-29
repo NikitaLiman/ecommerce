@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 interface IProps {
     productId: string;
     tenantSlug: string;
+
 }
 
 
@@ -31,6 +32,10 @@ export const ProductView = ({productId,tenantSlug}: IProps) => {
 
     const trpc = useTRPC()
     const {data} = useSuspenseQuery(trpc.products.getOne.queryOptions({id: productId}))
+
+
+
+
 
     return (
     <div className='px-4 lg:px-12 py-10'>
@@ -93,7 +98,7 @@ export const ProductView = ({productId,tenantSlug}: IProps) => {
                     <div className='border-t lg:border-t-0 lg:border-l h-full'>
                         <div className='flex flex-col gap-4 p-6 border-b'>
                             <div className='flex flex-row items-center gap-2'>
-                                <CartButton tenantSlug={tenantSlug} productId={productId} />
+                                <CartButton ispurchased={data.isPurchased} tenantSlug={tenantSlug} productId={productId} />
                                 <Button
                                     className='size-12'
                                     variant='elevated'

@@ -1,0 +1,27 @@
+import {LibraryView} from "@/modules/library/ui/views/library-view";
+import {getQueryClient, trpc} from "@/trpc/server";
+import {DEFAULT_LIMIT} from "@/modules/tags/constants";
+import {dehydrate, HydrationBoundary} from "@tanstack/react-query";
+
+const Library = async () => {
+
+  const queryClient = getQueryClient();
+  void queryClient.prefetchInfiniteQuery(trpc.library.getMany.infiniteQueryOptions(
+      {
+     limit: DEFAULT_LIMIT,
+      },
+      {
+        getNextPageParam: (lastPage) =>
+            lastPage.hasNextPage
+                ? lastPage.nextPage ?? undefined
+                : undefined,
+      }))
+
+  return (
+  <HydrationBoundary state={dehydrate(queryClient)}>
+    <LibraryView/>
+  </HydrationBoundary>
+  );
+};
+
+export default Library;

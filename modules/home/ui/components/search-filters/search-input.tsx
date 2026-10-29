@@ -32,7 +32,7 @@ export const SearchInput = ({disabled }: IProps) => {
         </Button>
         {session.data?.user && (
             <Button variant='elevated' className='bg-white'>
-                <Link className='flex items-center'  href='/Library'>
+                <Link prefetch className='flex items-center'  href='/library'>
                     <BookmarkCheckIcon className='mr-2'/>
                     Library
                 </Link>
