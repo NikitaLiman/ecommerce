@@ -4,7 +4,7 @@ import {baseProcedure, createTRPCRouter} from "@/trpc/init";
 import {z} from "zod";
 import {Sort, Where} from "payload";
 import {Category, Media, Tenant} from "@/payload-types";
-import {equal} from "node:assert";
+import {headers as getHeaders} from "next/headers";
 import {sortValues} from "@/modules/products/search-params";
 import {DEFAULT_LIMIT} from "@/modules/tags/constants";
 
@@ -14,14 +14,52 @@ export const productsRouter = createTRPCRouter({
             id: z.string(),
         })
     ).query(async ({ctx,input}) => {
+
+        const headers = await getHeaders();
+        const session = await ctx.db.auth({headers})
+
         const product = await ctx.db.findByID({
             collection: "products",
             id: input.id,
             depth: 2,
         })
 
+
+        let isPurchased = false;
+
+        console.log("Текущий пользователь:", session.user?.id);
+        console.log("Товар:", input.id);
+
+        if (session.user) {
+            const ordersData = await ctx.db.find({
+                collection: "orders",
+                limit: 1,
+                where: {
+                    and: [
+                        {
+                            products: {
+                                equals: input.id,
+                            },
+                        },
+                        {
+                            user: {
+                                equals: session.user.id,
+                            },
+                        },
+                    ],
+                },
+            });
+
+            console.log("Найденные заказы:", ordersData.docs);
+
+            isPurchased = ordersData.docs.length > 0;
+        }
+
+        console.log("isPurchased:", isPurchased);
+
         return {
             ...product,
+            isPurchased,
             image: product.image as Media | null,
             tenant: product.tenant as Tenant & {image: Media | null}
         }

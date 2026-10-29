@@ -24,10 +24,7 @@ export const CheckoutView = ({tenantSlug}: IProps) => {
 
     const trpc = useTRPC()
 
-    const {productsIds,clearAllCarts,removeProduct,clearCart} = useCart(tenantSlug);
-
-
-
+    const {productsIds,removeProduct,clearCart} = useCart(tenantSlug);
 
 
     const { data, error,isLoading } = useQuery(trpc.checkout.getProducts.queryOptions({
@@ -55,9 +52,9 @@ export const CheckoutView = ({tenantSlug}: IProps) => {
 
     useEffect(() => {
         if(states.success) {
-            setStates({success: false,cancel: false})
+            // setStates({success: false,cancel: false})
             clearCart();
-            router.push('/products')
+            // router.push('/products')
         }
     }, [states.success,clearCart,router,setStates]);
 
