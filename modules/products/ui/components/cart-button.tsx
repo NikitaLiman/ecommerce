@@ -18,7 +18,7 @@ export const CartButton = ({tenantSlug,productId,ispurchased}: IProps) => {
                 variant='ghost'
                 className='flex-1 font-medium bg-white'
             >
-                <Link  href={`/liblary/${productId}`}>
+                <Link  href={`/library/${productId}`}>
                     View in Library
                 </Link>
             </Button>
