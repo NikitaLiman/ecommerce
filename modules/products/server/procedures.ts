@@ -65,7 +65,7 @@ export const productsRouter = createTRPCRouter({
                 products: {
                     equals: input.id,
                 }
-            }
+            },
         })
 
         const reviewRating =
@@ -196,7 +196,7 @@ export const productsRouter = createTRPCRouter({
             }
         }
 
-        const data = await ctx.db .find({
+        const data = await ctx.db.find({
             collection: 'products',
             depth: 2,
             where,
