@@ -45,8 +45,8 @@ export const LibraryList = () => {
                    imageUrl={product.image?.url || ''}
                    tenantImageUrl={product.tenant?.image?.url || ''}
                    tenantSlug={product.tenant?.slug}
-                   reviewRating={3}
-                   reviewCount={5.0}
+                   reviewRating={product.reviewRating}
+                   reviewCount={product.reviewCount}
                />
            ))}
        </div>
