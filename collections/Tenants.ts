@@ -1,8 +1,13 @@
 import type { CollectionConfig } from 'payload'
 import {unique} from "next/dist/build/utils";
+import {isSuperAdmin} from "@/lib/access";
 
 export const Tenants: CollectionConfig = {
     slug: 'tenants',
+    access: {
+        create: ({ req}) => isSuperAdmin(req.user),
+        delete: ({ req}) => isSuperAdmin(req.user),
+    },
     admin: {
         useAsTitle: 'slug',
     },
@@ -35,9 +40,13 @@ export const Tenants: CollectionConfig = {
             name: 'stripeAccountId',
             type: 'text',
             required: true,
+            access: {
+                update: ({ req }) => isSuperAdmin(req.user),
+            },
             admin: {
                 readOnly: true,
-            }
+                description: "Stripe Account Id associated with your store",
+            },
         },
         {
             name: 'stripeDetailsSubmitted',
@@ -45,6 +54,9 @@ export const Tenants: CollectionConfig = {
             admin: {
                 readOnly: true,
                 description: "You cannot create products until you submit your Stripe Details",
+            },
+            access: {
+                update: ({ req }) => isSuperAdmin(req.user),
             }
         }
     ],
