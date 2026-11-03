@@ -22,7 +22,6 @@ export const Products: CollectionConfig = {
             return tenant.stripeDetailsSubmitted === true;
         },
     },
-    },
     fields: [
         {
             name: "name",
