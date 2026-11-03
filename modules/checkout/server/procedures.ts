@@ -8,6 +8,70 @@ import {CheckoutMetadata, ProductMetadata} from "@/modules/checkout/types";
 import {stripe} from "@/lib/stripe";
 
 export const checkoutRouter = createTRPCRouter({
+    verify: protectedProcedure.mutation(async ({ctx}) => {
+        const user = await ctx.db.findByID({
+            collection: 'users',
+            id: ctx.session.user.id,
+            depth: 0,
+        })
+
+        if(!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "User not found",
+            })
+        }
+
+        const tenantId = user.tenants?.[0]?.tenant as string;
+
+
+        const tenant = await ctx.db.findByID({
+            collection: "tenants",
+            id: tenantId
+        })
+
+        if(!tenant) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Tenant not found",
+            })
+        }
+
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL
+
+        if (!appUrl) {
+            throw new Error("NEXT_PUBLIC_APP_URL is not set")
+        }
+
+        // Reconcile with Stripe even if an onboarding webhook was missed.
+        const account = await stripe.accounts.retrieve(tenant.stripeAccountId)
+        await ctx.db.update({
+            collection: "tenants",
+            id: tenant.id,
+            overrideAccess: true,
+            data: { stripeDetailsSubmitted: account.details_submitted },
+        })
+
+        if (account.details_submitted) {
+            return { url: `${appUrl}/admin` }
+        }
+
+        const accountLink = await stripe.v2.core.accountLinks.create({
+            account: tenant.stripeAccountId,
+            use_case: {
+                type: "account_onboarding",
+                account_onboarding: {
+                    refresh_url: `${appUrl}/admin`,
+                    return_url: `${appUrl}/admin`,
+                },
+            },
+        })
+
+
+
+        return { url: accountLink.url }
+    }),
+
     purshace: protectedProcedure.input(
         z.object({
             productsIds: z.array(z.string()).min(1),
@@ -54,6 +118,13 @@ export const checkoutRouter = createTRPCRouter({
             })
         }
 
+        if(!tenant.stripeDetailsSubmitted) {
+            throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'Tenant not allowed to sell products.',
+            })
+        }
+
         const lineItem: Stripe.Checkout.SessionCreateParams.LineItem[] =
             products.docs.map((product) => ({
                 quantity: 1,
@@ -72,6 +143,10 @@ export const checkoutRouter = createTRPCRouter({
                 }
             }))
 
+
+        const totalAmount = products.docs.reduce((acc, item) => acc + item.price * 100, 0)
+        const platformFeePercent = Math.round((totalAmount / 10) * 100)
+
         const checkout = await stripe.checkout.sessions.create({
             customer_email: ctx.session.user.email,
             success_url: `${process.env.NEXT_PUBLIC_APP_URL}/tenants/${input.tenantSlug}/checkout?success=true`,
@@ -83,7 +158,13 @@ export const checkoutRouter = createTRPCRouter({
             },
             metadata: {
                 userId: ctx.session.user.id,
-            } as CheckoutMetadata
+            } as CheckoutMetadata,
+
+            payment_intent_data: {
+                application_fee_amount: platformFeePercent,
+            }
+        }, {
+            stripeAccount: tenant.stripeAccountId,
         })
 
 

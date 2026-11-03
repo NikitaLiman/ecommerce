@@ -5,6 +5,7 @@ import {z} from "zod";
 import {TRPCError} from "@trpc/server";
 import {AUTH_COOKIE} from "@/modules/auth/constants";
 import {loginSchema, registerSchema} from "@/modules/auth/schemas";
+import {stripe} from "@/lib/stripe";
 
 export const authRouter = createTRPCRouter({
     session: baseProcedure.query(async ({ctx}) => {
@@ -46,12 +47,40 @@ export const authRouter = createTRPCRouter({
                 })
             }
 
+            const account = await stripe.v2.core.accounts.create({
+                identity: {
+                    country: "PL",
+                },
+                dashboard: "full",
+                configuration: {
+                    merchant: {
+                        capabilities: {
+                            card_payments: { requested: true },
+                        },
+                    },
+                },
+                defaults: {
+                    responsibilities: {
+                        fees_collector: "stripe",
+                        losses_collector: "stripe",
+                    },
+                },
+            })
+
+
+            if(!account) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: `Failed to create Stripe account`,
+                })
+            }
+
             const tenant = await ctx.db.create({
                 collection: "tenants",
                 data: {
                     name: input.username,
                     slug: input.username,
-                    stripeAccountId: "mock",
+                    stripeAccountId: account.id,
                 }
             })
 
