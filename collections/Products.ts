@@ -5,13 +5,22 @@ import {Tenant} from "@/payload-types";
 export const Products: CollectionConfig = {
     slug: "products",
     access: {
-        create: ({ req }) => {
-            if(isSuperAdmin(req.user)) return true;
+        create: async ({ req }) => {
+            if (!req.user) return false;
+            if (isSuperAdmin(req.user)) return true;
 
-            const tenant = req.user?.tenants?.[0]?.tenant as Tenant;
+            const relation = req.user.tenants?.[0]?.tenant;
+            if (!relation) return false;
 
-            return Boolean(tenant?.stripeDetailsSubmitted);
-        }
+            const tenant = await req.payload.findByID({
+                collection: "tenants",
+                id: typeof relation === "object" ? relation.id : relation,
+                depth: 0,
+                overrideAccess: true,
+            });
+
+            return tenant.stripeDetailsSubmitted === true;
+        },
     },
     fields: [
         {

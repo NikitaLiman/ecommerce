@@ -36,6 +36,10 @@ export const Orders: CollectionConfig = {
             name: "stripeCheckoutSessionId",
             type: 'text',
             required: true,
+        },
+        {
+            name: "stripeAccountId",
+            type: 'text',
         }
     ]
 }
