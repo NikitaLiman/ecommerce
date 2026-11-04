@@ -2,7 +2,8 @@ import {LibraryView} from "@/modules/library/ui/views/library-view";
 import {getQueryClient, trpc} from "@/trpc/server";
 import {DEFAULT_LIMIT} from "@/modules/tags/constants";
 import {dehydrate, HydrationBoundary} from "@tanstack/react-query";
-import {LibraryProductView} from "@/modules/library/ui/views/library-product-view";
+import {LibraryProductView, LibraryProductViewSkeleton} from "@/modules/library/ui/views/library-product-view";
+import {Suspense} from "react";
 
 
 interface IProps {
@@ -23,7 +24,10 @@ const LibraryProductPage = async ({params}: IProps) => {
 
   return (
   <HydrationBoundary state={dehydrate(queryClient)}>
-    <LibraryProductView productId={productId} />
+      <Suspense fallback={<LibraryProductViewSkeleton/>}>
+          <LibraryProductView productId={productId} />
+
+      </Suspense>
   </HydrationBoundary>
   );
 };
