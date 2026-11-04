@@ -152,3 +152,43 @@ export const ReviewForm = ({productId,initialData}: IProps) => {
       </FormProvider>
   );
 };
+
+
+export const ReviewFormSkeleton = () => {
+    return (
+        <div className='flex flex-col gap-4'>
+            <p className='font-medium'>
+                Liked it? Give it a rating
+            </p>
+            <FieldGroup>
+                <Field >
+                    <StarPicker
+                        disabled
+                    />
+                </Field>
+            </FieldGroup>
+            <FieldGroup>
+                <Field>
+                    <FieldLabel htmlFor='description'>
+                        Email
+                    </FieldLabel>
+                    <Textarea
+                        disabled
+                        id='description'
+                        placeholder='Enter the description'
+                    />
+                </Field>
+
+            </FieldGroup>
+            <Button
+                variant='elevated'
+                disabled
+                type='button'
+                size={'lg'}
+                className='bg-black text-white hover:bg-pink-400 hover:text-primary w-fit'
+            >
+                Post review
+            </Button>
+        </div>
+    )
+}

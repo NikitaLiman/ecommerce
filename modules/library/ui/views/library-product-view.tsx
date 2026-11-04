@@ -5,6 +5,8 @@ import {ArrowLeftIcon} from "lucide-react";
 import {useSuspenseQuery} from "@tanstack/react-query";
 import {useTRPC} from "@/trpc/client";
 import {ReviewSideBar} from "@/modules/library/ui/components/review-side-bar";
+import {Suspense} from "react";
+import {ReviewFormSkeleton} from "@/modules/library/ui/components/review-form";
 
 interface IProps {
     productId: string;
@@ -38,7 +40,9 @@ export const LibraryProductView = ({productId}: IProps) => {
             <div className='grid grid-cols-1 lg:grid-cols-7 gap-4 lg:gap-16'>
                 <div className='lg:col-span-2'>
                     <div className='p-4 bg-white rounded-mb border gap-4'>
-                        <ReviewSideBar productId={productId} />
+                        <Suspense fallback={<ReviewFormSkeleton/>}>
+                            <ReviewSideBar productId={productId} />
+                        </Suspense>
                     </div>
                 </div>
                 <div className='lg:col-span-5'>
@@ -51,3 +55,20 @@ export const LibraryProductView = ({productId}: IProps) => {
     </div>
   );
 };
+
+
+export const LibraryProductViewSkeleton = () => {
+    return (
+
+        <div className="min-h-screen bg-white">
+            <div className={'p-4 bg-[#f4f4f0] w-full border-b'}>
+                <Link href='/library' className='flex items-center gap-2'>
+                    <ArrowLeftIcon className='size-4'/>
+                    <span className='text font-medium'>
+                Back to Library
+            </span>
+                </Link>
+            </div>
+        </div>
+    )
+}
