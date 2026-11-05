@@ -12,6 +12,8 @@ interface IProps {
     }>
 }
 
+export const dynamic = 'force-dynamic'
+
 const LibraryProductPage = async ({params}: IProps) => {
 
     const {productId} = await params;
