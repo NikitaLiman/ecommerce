@@ -8,13 +8,17 @@ import {Button} from "@/components/ui/button";
 import {useTRPC} from "@/trpc/client";
 import {useQuery} from "@tanstack/react-query";
 import Link from "next/link";
+import {useProductFilters} from "@/modules/products/hooks/use-products-filters";
 
 interface IProps {
     disabled?: boolean;
 }
 
 export const SearchInput = ({disabled }: IProps) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const [filters,setFilters] = useProductFilters();
+
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const trpc = useTRPC()
 
@@ -25,7 +29,13 @@ export const SearchInput = ({disabled }: IProps) => {
         <CategoriesSideBar open={isSidebarOpen} setIsSideBarOpen={setIsSidebarOpen}/>
         <div className='relative w-full'>
             <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-500"  />
-            <Input className='pl-8' placeholder='Search products' disabled={disabled} />
+            <Input
+                className='pl-8'
+                placeholder='Search products'
+                disabled={disabled}
+                value={filters.search}
+                onChange={(e) => setFilters({search: e.target.value})}
+            />
         </div>
         <Button onClick={() => setIsSidebarOpen(true)} className='size-12 shrink-0 flex lg:hidden' variant='elevated'>
             <ListFilterIcon/>
