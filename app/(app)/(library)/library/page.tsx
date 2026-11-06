@@ -3,6 +3,9 @@ import {getQueryClient, trpc} from "@/trpc/server";
 import {DEFAULT_LIMIT} from "@/modules/tags/constants";
 import {dehydrate, HydrationBoundary} from "@tanstack/react-query";
 
+
+export const dynamic = 'force-dynamic'
+
 const Library = async () => {
 
   const queryClient = getQueryClient();
