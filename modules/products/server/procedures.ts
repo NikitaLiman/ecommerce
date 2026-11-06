@@ -120,6 +120,7 @@ export const productsRouter = createTRPCRouter({
     }),
     getMany: baseProcedure.input(
         z.object({
+            search: z.string().nullable().optional(),
             cursor: z.number().default(1),
             limit: z.number().default(DEFAULT_LIMIT),
             category: z.string().optional().nullable(),
@@ -211,6 +212,12 @@ export const productsRouter = createTRPCRouter({
         if(input.tags && input.tags.length > 0) {
             where['tags.name'] = {
                 in: input.tags,
+            }
+        }
+
+        if(input.search) {
+            where['name'] = {
+                like: input.search,
             }
         }
 
